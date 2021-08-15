@@ -35,6 +35,10 @@ defmodule Crudry.Resolver do
           {:ok, MyContext.list_my_schemas([])}
         end
 
+        def search_my_schemas(_args, _info) do
+          {:ok, MyContext.search_my_schemas([])}
+        end
+
         def create_my_schema(%{params: params}, _info) do
           MyContext.create_my_schema(params)
         end
@@ -65,7 +69,7 @@ defmodule Crudry.Resolver do
       end
   """
 
-  @all_functions ~w(get list create update delete)a
+  @all_functions ~w(get list search create update delete)a
   # Always generate helper functions since they are used in the other generated functions
   @helper_functions ~w(nil_to_error add_info_to_custom_query)a
 

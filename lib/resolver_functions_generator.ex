@@ -27,6 +27,16 @@ defmodule ResolverFunctionsGenerator do
     end
   end
 
+  def generate_function(:search, _name, pluralized_name, context, _opts) do
+    quote do
+      def unquote(:"search_#{pluralized_name}")(args \\ %{}, info) do
+        {:ok,
+          apply(unquote(context), String.to_existing_atom("search_#{unquote(pluralized_name)}"), [Map.get(args, :search), Map.get(args, :opts, []), Map.get(args, :assocs, [])])
+        }
+      end
+    end
+  end
+
   def generate_function(:create, name, _pluralized_name, context, opts) do
     quote do
       def unquote(:"create_#{name}")(%{params: params} = args, info) do

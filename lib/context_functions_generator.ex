@@ -114,12 +114,14 @@ defmodule ContextFunctionsGenerator do
 
   def generate_function(:search, _name, pluralized_name, module, opts) do
     quote do
-      def unquote(:"search_#{pluralized_name}")(search_term, repo_opts \\ []) do
+      def unquote(:"search_#{pluralized_name}")(search_term \\ nil, opts \\ [], assocs \\ [], repo_opts \\ []) do
         module_fields = unquote(module).__schema__(:fields)
 
         unquote(module)
         |> Crudry.Query.search(search_term, module_fields)
+        |> Crudry.Query.list(opts)
         |> unquote(get_repo_module(opts)).all(repo_opts)
+        |> unquote(get_repo_module(opts)).preload(assocs)
       end
     end
   end

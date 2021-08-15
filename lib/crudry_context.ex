@@ -130,12 +130,14 @@ defmodule Crudry.Context do
           |> Repo.all()
         end
 
-        def search_my_schemas(search_term) do
+        def search_my_schemas(search_term \\\\ nil, opts \\\\ [], assocs \\\\ []) do
           module_fields = MySchema.__schema__(:fields)
 
           MySchema
+          |> Crudry.Query.list(opts)
           |> Crudry.Query.search(search_term, module_fields)
           |> Repo.all()
+          |> Repo.preload(assocs)
         end
 
         def count_my_schemas(field \\\\ :id) do

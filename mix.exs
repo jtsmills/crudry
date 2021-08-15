@@ -1,12 +1,12 @@
 defmodule Crudry.MixProject do
   use Mix.Project
 
-  @github_url "https://github.com/jungsoft/crudry"
+  @github_url "https://github.com/jtsmills/crudry"
 
   def project do
     [
       app: :crudry,
-      version: "2.4.0",
+      version: "2.4.1",
       elixir: "~> 1.8",
       start_permanent: Mix.env() == :prod,
       compilers: [:gettext] ++ Mix.compilers,
