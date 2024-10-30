@@ -186,6 +186,23 @@ defmodule Crudry.Context do
           |> Repo.update!()
         end
 
+        def update_many_my_schemas(%{id: id, params: params}[] = update_records) do
+          Repo.transact(fn ->
+            updated_records = Enum.map(update_records, fn %{id: id, params: params} ->
+              MySchema
+              |> Repo.get!(id)
+              |> update_my_schema(params)
+            end)
+
+            Enum.any?(updated_records, &match?({:error, _}, &1))
+            |> case do
+              true -> {:error, updated_records}
+              false -> {:ok, updated_records}
+            end
+          end)
+          )
+        end
+
         ## Delete functions
 
         def delete_my_schema(%MySchema{} = my_schema) do

@@ -154,7 +154,7 @@ defmodule ContextFunctionsGenerator do
     end
   end
 
-  def generate_function(:update, name, _pluralized_name, module, opts) do
+  def generate_function(:update, name, pluralized_name, module, opts) do
     quote do
       def unquote(:"update_#{name}")(%unquote(module){} = struct, attrs, repo_opts \\ []) do
         struct
@@ -180,6 +180,23 @@ defmodule ContextFunctionsGenerator do
         |> unquote(get_repo_module(opts)).preload(assocs)
         |> unquote(module).unquote(opts[:update])(attrs)
         |> unquote(get_repo_module(opts)).update!(repo_opts)
+      end
+
+      def unquote(:"update_many_#{pluralized_name}")(update_records, repo_opts \\ []) do
+        unquote(get_repo_module(opts)).transact(fn ->
+          updated_records = Enum.map(update_records, fn %{id: id, params: params} ->
+            unquote(module)
+            |> unquote(get_repo_module(opts)).get(id)
+            |> unquote(module).unquote(opts[:update])(params)
+            |> unquote(get_repo_module(opts)).update()
+          end)
+
+          Enum.any?(updated_records, &match?({:error, _}, &1))
+          |> case do
+            true -> {:error, updated_records}
+            false -> {:ok, updated_records}
+          end
+        end)
       end
     end
   end
