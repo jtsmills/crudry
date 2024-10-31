@@ -49,6 +49,10 @@ defmodule Crudry.Resolver do
           |> nil_to_error("my_schema", fn record -> MyContext.update_my_schema(record, params) end)
         end
 
+        def update_my_schemas(update_records, _info) do
+          MyContext.update_my_schemas(update_records)
+        end
+
         def delete_my_schema(%{id: id}, _info) do
           id
           |> MyContext.get_my_schema()

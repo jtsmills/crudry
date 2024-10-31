@@ -48,7 +48,7 @@ defmodule ResolverFunctionsGenerator do
     end
   end
 
-  def generate_function(:update, name, _pluralized_name, context, opts) do
+  def generate_function(:update, name, pluralized_name, context, opts) do
     quote do
       def unquote(:"update_#{name}")(%{unquote(opts[:primary_key]) => id, params: params} = args, info) do
         unquote(context)
@@ -59,6 +59,10 @@ defmodule ResolverFunctionsGenerator do
             update_resolver -> update_resolver.(unquote(context), unquote(name), record, args, info)
           end
         end)
+      end
+
+      def unquote(:"update_#{pluralized_name}")(update_records, info) do
+        apply(unquote(context), String.to_existing_atom("update_#{unquote(pluralized_name)}"), [update_records])
       end
     end
   end
