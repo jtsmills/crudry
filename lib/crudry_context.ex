@@ -186,7 +186,7 @@ defmodule Crudry.Context do
           |> Repo.update!()
         end
 
-        def update_many_my_schemas(%{id: id, params: params}[] = update_records) do
+        def update_my_schemas(%{id: id, params: params}[] = update_records) do
           Repo.transact(fn ->
             updated_records = Enum.map(update_records, fn %{id: id, params: params} ->
               MySchema
@@ -307,7 +307,7 @@ defmodule Crudry.Context do
   defmacro generate_functions(schema_module, opts \\ []) do
     opts = Keyword.merge(load_default(__CALLER__.module), opts)
     name = Helper.get_underscored_name(schema_module)
-    pluralized_name = Helper.get_pluralized_name(schema_module, __CALLER__)
+    pluralized_name = Keyword.get(opts, :pluralized_name, Helper.get_pluralized_name(schema_module, __CALLER__))
 
     for func <- Helper.get_functions_to_be_generated(__CALLER__.module, @all_functions, @helper_functions, opts) do
       ContextFunctionsGenerator.generate_function(func, name, pluralized_name, schema_module, opts)

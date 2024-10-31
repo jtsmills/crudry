@@ -182,7 +182,7 @@ defmodule ContextFunctionsGenerator do
         |> unquote(get_repo_module(opts)).update!(repo_opts)
       end
 
-      def unquote(:"update_many_#{pluralized_name}")(update_records, repo_opts \\ []) do
+      def unquote(:"update_#{pluralized_name}")(update_records, repo_opts \\ []) do
         unquote(get_repo_module(opts)).transact(fn ->
           updated_records = Enum.map(update_records, fn %{id: id, params: params} ->
             unquote(module)
