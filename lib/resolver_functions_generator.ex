@@ -61,8 +61,8 @@ defmodule ResolverFunctionsGenerator do
         end)
       end
 
-      def unquote(:"update_#{pluralized_name}")(update_records, info) do
-        apply(unquote(context), String.to_existing_atom("update_#{unquote(pluralized_name)}"), [update_records])
+      def unquote(:"update_#{pluralized_name}")(%{params: params} = _args, info) do
+        apply(unquote(context), String.to_existing_atom("update_#{unquote(pluralized_name)}"), [params])
       end
     end
   end
