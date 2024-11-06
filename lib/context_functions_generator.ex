@@ -189,6 +189,10 @@ defmodule ContextFunctionsGenerator do
             |> unquote(get_repo_module(opts)).get(id)
             |> unquote(module).unquote(opts[:update])(params)
             |> unquote(get_repo_module(opts)).update()
+            |> case do
+              {:ok, record} -> record
+              {:error, changeset} -> {:error, changeset}
+            end
           end)
 
           Enum.any?(updated_records, &match?({:error, _}, &1))

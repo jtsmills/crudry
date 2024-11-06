@@ -204,7 +204,7 @@ defmodule Crudry.Resolver do
 
     opts = Keyword.merge(load_default(__CALLER__.module), opts)
     name = Helper.get_underscored_name(schema_module)
-    pluralized_name = Helper.get_pluralized_name(schema_module, __CALLER__)
+    pluralized_name = Keyword.get(opts, :pluralized_name, Helper.get_pluralized_name(schema_module, __CALLER__))
     _ = String.to_atom(name)
 
     for func <- Helper.get_functions_to_be_generated(__CALLER__.module, @all_functions, @helper_functions, opts) do
